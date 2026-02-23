@@ -1460,7 +1460,7 @@
             
             for (let i = 0; i < bufferSize; i++) {
                 data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
-            }
+              }
             
             const noise = audioContext.createBufferSource();
             noise.buffer = buffer;
@@ -1480,135 +1480,7 @@
             noise.start();
         }
 
-        // Sad Happy Birthday Song
-        let isPlaying = false;
-        let audioContext = null;
-        let currentOscillators = [];
-
-        function toggleSong() {
-            const playBtn = document.getElementById('playBtn');
-            const songIcon = document.getElementById('songIcon');
-            
-            if (isPlaying) {
-                stopSadSong();
-                playBtn.textContent = '🎵 Play Song';
-                playBtn.classList.remove('playing');
-                songIcon.classList.remove('playing');
-            } else {
-                playSadSong();
-                playBtn.textContent = '⏹️ Stop Song';
-                playBtn.classList.add('playing');
-                songIcon.classList.add('playing');
-            }
-            isPlaying = !isPlaying;
-        }
-
-        function playSadSong() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Sad Happy Birthday melody with melancholic tones
-            // Notes: [note, duration] - using lower octave and slower tempo for sad effect
-            const melody = [
-                // "Happy"
-                ['G3', 0.6], ['G3', 0.3], ['A3', 0.6], ['G3', 0.6], ['C4', 0.6], ['B3', 1.2],
-                // "to"
-                ['G3', 0.6], ['G3', 0.3], ['A3', 0.6], ['G3', 0.6], ['D4', 0.6], ['C4', 1.2],
-                // "you"
-                ['G3', 0.6], ['G3', 0.3], ['G4', 0.6], ['E4', 0.6], ['C4', 0.6], ['B3', 0.6], ['A3', 1.2],
-                // "Happy"
-                ['F4', 0.6], ['F4', 0.3], ['E4', 0.6], ['C4', 0.6], ['D4', 0.6], ['C4', 1.2],
-                // "birthday"
-                ['G3', 0.6], ['G3', 0.3], ['A3', 0.6], ['G3', 0.6], ['C4', 0.6], ['B3', 0.6], ['G3', 1.2],
-                // "to"
-                ['G3', 0.6], ['D4', 0.6], ['C4', 1.2],
-                // "you"
-                ['G3', 0.6], ['G3', 0.6], ['G4', 0.6], ['E4', 0.6], ['C4', 0.6], ['D4', 0.6], ['C4', 1.5]
-            ];
-
-            let currentTime = audioContext.currentTime + 0.5;
-
-            melody.forEach(([note, duration]) => {
-                const freq = noteToFrequency(note);
-                const osc = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                osc.type = 'sine'; // Sine wave for softer, sadder sound
-                osc.frequency.setValueAtTime(freq, currentTime);
-                
-                // Sad effect: slower attack and release
-                gainNode.gain.setValueAtTime(0, currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.15, currentTime + 0.1);
-                gainNode.gain.linearRampToValueAtTime(0.12, currentTime + duration * 0.5);
-                gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
-                
-                osc.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                osc.start(currentTime);
-                osc.stop(currentTime + duration);
-                
-                currentOscillators.push(osc);
-                currentTime += duration;
-            });
-
-            // Add melancholic echo effect
-            setTimeout(() => {
-                addSadEcho();
-            }, 1000);
-        }
-
-                function addSadEcho() {
-            if (!isPlaying) return;
-            
-            const echoOsc = audioContext.createOscillator();
-            const echoGain = audioContext.createGain();
-            
-            echoOsc.type = 'sine';
-            echoOsc.frequency.setValueAtTime(220, audioContext.currentTime); // A3 - lower note for sadness
-            
-            echoGain.gain.setValueAtTime(0, audioContext.currentTime);
-            echoGain.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.5);
-            echoGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 2);
-            
-            echoOsc.connect(echoGain);
-            echoGain.connect(audioContext.destination);
-            
-            echoOsc.start(audioContext.currentTime);
-            echoOsc.stop(audioContext.currentTime + 2);
-            
-            // Add subtle vibrato for sad effect
-            setInterval(() => {
-                if (isPlaying && audioContext) {
-                    const vibratoOsc = audioContext.createOscillator();
-                    const vibratoGain = audioContext.createGain();
-                    
-                    vibratoOsc.type = 'sine';
-                    vibratoOsc.frequency.setValueAtTime(4, audioContext.currentTime); // 4Hz vibrato
-                    
-                    vibratoGain.gain.setValueAtTime(2, audioContext.currentTime);
-                    vibratoGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
-                    
-                    vibratoOsc.connect(vibratoGain);
-                    vibratoGain.connect(audioContext.destination);
-                    
-                    vibratoOsc.start(audioContext.currentTime);
-                    vibratoOsc.stop(audioContext.currentTime + 0.5);
-                }
-            }, 2000);
-        }
-
-        function stopSadSong() {
-            currentOscillators.forEach(osc => {
-                try {
-                    osc.stop();
-                } catch (e) {}
-            });
-            currentOscillators = [];
-            if (audioContext) {
-                audioContext.close();
-                audioContext = null;
-            }
-        }
+     
 
         function noteToFrequency(note) {
             const notes = {
@@ -1621,9 +1493,17 @@
             };
             return notes[note] || 440;
         }
+1495 }
 
-        // Initialize on load
-        window.onload = function() {
+1496 function playMusic() {
+1497     const music = document.getElementById("bgMusic");
+1498     music.currentTime = 0;
+1499     music.play();
+1500 }
+
+1501 // Initialize on load
+1502 window.onload = function() {
+        
             createParticles();
             
             // Auto celebration after 2 seconds
@@ -1632,5 +1512,6 @@
             }, 2000);
         };
     </script>
+    <audio id="bgMusic" src="Audio.mp3"></audio>
 </body>
 </html>
