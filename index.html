@@ -1479,6 +1479,27 @@
             
             noise.start();
         }
+        let isPlaying = false;
+
+function toggleSong() {
+    const audio = document.getElementById("birthdaySong");
+    const btn = document.getElementById("playBtn");
+    const icon = document.getElementById("songIcon");
+
+    if (!isPlaying) {
+        audio.play();
+        btn.textContent = "⏸ Pause Song";
+        btn.classList.add("playing");
+        icon.classList.add("playing");
+        isPlaying = true;
+    } else {
+        audio.pause();
+        btn.textContent = "🎵 Play Song";
+        btn.classList.remove("playing");
+        icon.classList.remove("playing");
+        isPlaying = false;
+    }
+                }
 // Initialize on load
         window.onload = function() {
             createParticles();
